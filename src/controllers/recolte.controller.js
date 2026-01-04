@@ -8,32 +8,66 @@ import cloudinary from "../config/cloudinary.js";
 
 
 
+export const createRecoltePost = asyncHandler(async (req, res) => {
+  // 1. Récupération de l'utilisateur Clerk
+  const { userId } = getAuth(req);
+  if (!userId) {
+    return res.status(401).json({ error: "Unauthorized" });
+  }
 
-export  const createRecoltePost = asyncHandler(async (req, res) => {
-        const { userId } = getAuth(req);
-        const user = await User.findOne({ clerkId: userId });
-        if (!user) return res.status(404).json({ error: "User not found" });
-    
-        const { images, title,phone ,  description,price,category,quantity, city,country } = req.body;
-        const imageUploads = await Promise.all(images.map((image) => cloudinary.uploader.upload(image)));
-        const imagesUrls = imageUploads.map((result) => result.secure_url);
-    
-         const recolte = await Recolte.create({
-            user: user._id,
-              images: imagesUrls,
-               title,
-               phone ,
-                 description,
-                 price,
-                 category,
-                 quantity,
-                  city,
-                  country
-         
-        });
-    
-        res.status(201).json({ recolte });
-    });
+  const user = await User.findOne({ clerkId: userId });
+  if (!user) {
+    return res.status(404).json({ error: "User not found" });
+  }
+
+  // 2. Données reçues
+  const {
+    images = [],
+    title,
+    phone,
+    description,
+    price,
+    category,
+    quantity,
+    city,
+    country,
+  } = req.body;
+
+  if (!Array.isArray(images) || images.length === 0) {
+    return res.status(400).json({ error: "Images are required" });
+  }
+
+  // 3. Upload Cloudinary
+  const imageUploads = await Promise.all(
+    images.map((image) =>
+      cloudinary.uploader.upload(image, {
+        folder: "recoltes",
+      })
+    )
+  );
+
+  const imagesUrls = imageUploads.map((img) => img.secure_url);
+
+  // 4. Création de la récolte
+  const recolte = await Recolte.create({
+    user: user._id,
+    images: imagesUrls,
+    title,
+    phone,
+    description,
+    price,
+    category,
+    quantity,
+    city,
+    country,
+  });
+
+  // 5. Réponse
+  res.status(201).json({
+    success: true,
+    recolte,
+  });
+});
 
 
 
@@ -102,3 +136,4 @@ export const getMyRecoltePost = asyncHandler(async (req, res) => {
 
 
   
+
