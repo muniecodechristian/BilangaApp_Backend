@@ -18,8 +18,9 @@ router.get("/:postId", getMyRecoltePost);
 
 
 // protected proteced
-router.post("/", protectRoute, upload.single("image"), createRecoltePost);
+router.post("/", protectRoute,  upload.array("images", 5), createRecoltePost);
 
 router.delete("/:postId", protectRoute, deleteRecoltePost);
 
 export default router;
+
