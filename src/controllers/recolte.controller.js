@@ -8,8 +8,8 @@ import cloudinary from "../config/cloudinary.js";
 
 
 
+
 export const createRecoltePost = asyncHandler(async (req, res) => {
-  // 1. Récupération de l'utilisateur Clerk
   const { userId } = getAuth(req);
   if (!userId) {
     return res.status(401).json({ error: "Unauthorized" });
@@ -20,53 +20,39 @@ export const createRecoltePost = asyncHandler(async (req, res) => {
     return res.status(404).json({ error: "User not found" });
   }
 
-  // 2. Données reçues
-  const {
-    images = [],
-    title,
-    phone,
-    description,
-    price,
-    category,
-    quantity,
-    city,
-    country,
-  } = req.body;
-
-  if (!Array.isArray(images) || images.length === 0) {
-    return res.status(400).json({ error: "Images are required" });
+  if (!req.files || req.files.length === 0) {
+    return res.status(400).json({ error: "Images required" });
   }
 
-  // 3. Upload Cloudinary
-  const imageUploads = await Promise.all(
-    images.map((image) =>
-      cloudinary.uploader.upload(image, {
+  // 🔁 CONVERSION req.files → Base64
+  const imagesBase64 = req.files.map((file) => {
+    return `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
+  });
+
+  // ☁️ Upload Cloudinary
+  const uploadedImages = await Promise.all(
+    imagesBase64.map(async (base64) => {
+      const result = await cloudinary.uploader.upload(base64, {
         folder: "recoltes",
-      })
-    )
+      });
+      return result.secure_url;
+    })
   );
 
-  const imagesUrls = imageUploads.map((img) => img.secure_url);
-
-  // 4. Création de la récolte
   const recolte = await Recolte.create({
     user: user._id,
-    images: imagesUrls,
-    title,
-    phone,
-    description,
-    price,
-    category,
-    quantity,
-    city,
-    country,
+    images: uploadedImages,
+    title: req.body.title,
+    phone: req.body.phone,
+    description: req.body.description,
+    price: req.body.price,
+    category: req.body.category,
+    quantity: req.body.quantity,
+    city: req.body.city,
+    country: req.body.country,
   });
 
-  // 5. Réponse
-  res.status(201).json({
-    success: true,
-    recolte,
-  });
+  res.status(201).json({ success: true, recolte });
 });
 
 
@@ -132,8 +118,4 @@ export const getMyRecoltePost = asyncHandler(async (req, res) => {
 
   
 
-
-
-
-  
 
