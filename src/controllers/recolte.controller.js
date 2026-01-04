@@ -15,10 +15,12 @@ export  const createRecoltePost = asyncHandler(async (req, res) => {
         if (!user) return res.status(404).json({ error: "User not found" });
     
         const { images, title,phone ,  description,price,category,quantity, city,country } = req.body;
+        const imageUploads = await Promise.all(images.map((image) => cloudinary.uploader.upload(image)));
+        const imagesUrls = imageUploads.map((result) => result.secure_url);
     
          const recolte = await Recolte.create({
             user: user._id,
-              images,
+              images: imagesUrls,
                title,
                phone ,
                  description,
@@ -89,6 +91,13 @@ export const getMyRecoltePost = asyncHandler(async (req, res) => {
 
 
   
+
+
+
+  
+
+  
+
 
 
 
