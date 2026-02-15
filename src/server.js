@@ -53,6 +53,6 @@ const startServer = async () => {
 
 startServer();
 
-      app.listen(PORT, () => console.log("Server is up and running on PORT:", PORT));
+
 // export for vercel
 export default app;
