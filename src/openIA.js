@@ -4,7 +4,7 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const client = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: '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',
 });
 
 
@@ -30,5 +30,6 @@ export  default async function chat(prompt) {
   }
   
 }
+
 
 
