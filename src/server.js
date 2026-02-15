@@ -30,7 +30,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/recoltes", recolteRoutes);
-app.use("/api/chatIa", chatIaRoutes);
+//app.use("/api/chatIa", chatIaRoutes);
 
 // error handling middleware
 app.use((err, req, res, next) => {
