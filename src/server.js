@@ -22,7 +22,7 @@ app.use(express.json());
 app.use(clerkMiddleware());
 app.use(arcjetMiddleware);
 
-app.get("/", (req, res) => res.send("Hello from server update"));
+//app.get("/", (req, res) => res.send("Hello from server update"));
 
 
 app.use("/api/users", userRoutes);
@@ -30,7 +30,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/recoltes", recolteRoutes);
-//app.use("/api/chatIa", chatIaRoutes);
+app.use("/api/chatIa", chatIaRoutes);
 
 // error handling middleware
 app.use((err, req, res, next) => {
