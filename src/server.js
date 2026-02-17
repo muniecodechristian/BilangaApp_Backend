@@ -7,7 +7,7 @@ import postRoutes from "./routes/post.route.js";
 import commentRoutes from "./routes/comment.route.js";
 import notificationRoutes from "./routes/notification.route.js";
 import recolteRoutes from "./routes/recolte.route.js";
-import chatIaRoutes from "./routes/agriChat.route.js"
+//import chatIaRoutes from "./routes/agriChat.route.js"
 
 import { ENV } from "./config/env.js";
 import { connectDB } from "./config/db.js";
@@ -30,7 +30,7 @@ app.use("/api/posts", postRoutes);
 app.use("/api/comments", commentRoutes);
 app.use("/api/notifications", notificationRoutes);
 app.use("/api/recoltes", recolteRoutes);
-app.use("/api/chatIa", chatIaRoutes);
+//app.use("/api/chatIa", chatIaRoutes);
 
 // error handling middleware
 app.use((err, req, res, next) => {
