@@ -24,7 +24,7 @@ export const createRecoltePost = asyncHandler(async (req, res) => {
     return res.status(400).json({ error: "Images required" });
   }
 
-  // 🔁 CONVERSION req.files → Base64
+  // CONVERSION req.files → Base64
   const imagesBase64 = req.files.map((file) => {
     return `data:${file.mimetype};base64,${file.buffer.toString("base64")}`;
   });
